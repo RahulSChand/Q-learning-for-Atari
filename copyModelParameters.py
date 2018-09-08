@@ -1,0 +1,13 @@
+def copyModelParameters(sess, estimator1, estimator2):
+   
+    e1_params = [t for t in tf.trainable_variables() if t.name.startswith(estimator1.scope)]
+    e1_params = sorted(e1_params, key=lambda v: v.name)
+    e2_params = [t for t in tf.trainable_variables() if t.name.startswith(estimator2.scope)]
+    e2_params = sorted(e2_params, key=lambda v: v.name)
+
+    update_ops = []
+    for e1_v, e2_v in zip(e1_params, e2_params):
+        op = e2_v.assign(e1_v)
+        update_ops.append(op)
+
+    sess.run(update_ops)
